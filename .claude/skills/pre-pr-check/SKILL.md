@@ -1,41 +1,25 @@
 ---
 name: pre-pr-check
-description: Runs a pre-PR quality checklist — lint, tests, type-check, and convention audit — before opening a pull request.
+description: Runs lint, build, tests, and convention scan before opening a PR.
 context: fork
-allowed-tools:
-  - Read
-  - Bash
+allowed-tools: [Bash, Read]
 ---
-
-# Skill: pre-pr-check
-
-## Purpose
-One-command pre-PR gate that catches issues before review.
-Runs in forked context so output is isolated.
-
-## Usage
-```
-/skill pre-pr-check
-```
-
+# Skill: Pre-PR Check
 ## Steps
-
-1. Run `npm run lint` — report any ESLint or Prettier failures
-2. Run `npm run build` — report TypeScript type errors
-3. Run `npm run test` — report failing tests with names
-4. Scan changed files for `console.log`, hardcoded secrets, and `any` types
-5. Print a pass/fail summary for each check
-
-## Output Format
-```
-Pre-PR Check — SubSync
-======================
-✅ Lint: passed
-✅ Build: passed (0 type errors)
-❌ Tests: 2 failing
-   - should cancel subscription when user is authenticated
-   - should return 400 when subscriptionId is missing
-⚠️  Convention issues:
-   - src/api/routes/billing.ts line 34: console.log found
-Result: NOT READY — fix 1 test failure and 1 convention issue
-```
+### Step 1 - Lint
+Run: npm run lint. Record PASS or FAIL with error count.
+### Step 2 - Build
+Run: npm run build. Record PASS or FAIL.
+### Step 3 - Tests
+Run: npm run test. Record passed / failed / skipped.
+### Step 4 - Convention Scan
+Check: no console.log in src/api/ or src/ui/, no hardcoded secrets, all routes under /api/v1/.
+## Output Report Format
+===== PRE-PR CHECK REPORT =====
+Lint:        ✅ PASS  (0 errors)
+Build:       ✅ PASS
+Tests:       ✅ PASS  (42 passed, 0 failed)
+Conventions: ✅ PASS  (no violations found)
+Overall:     ✅ READY TO PR
+================================
+If any step fails, Overall shows BLOCKED and lists specific failures.

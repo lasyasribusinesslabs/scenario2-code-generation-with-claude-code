@@ -1,42 +1,25 @@
-# API Conventions — SubSync
-
-> Auto-loaded by CLAUDE.md via @import. Applies to all files in src/api/.
-
+---
+globs: ["src/api/**"]
+---
+# API Conventions
 ## Route Structure
-- All routes live in `src/api/routes/<resource>.ts`
-- Use Express Router: `const router = Router()`
-- Export default router from every route file
-- Register all routers in `src/api/app.ts` under `/api/v1/`
-
-## Middleware Requirements
-- Every protected route must use `authMiddleware` (checks JWT from Authorization header)
-- Mutating routes (POST, PATCH, DELETE) must use `validateBody(Schema)` middleware
-- All public endpoints must use `rateLimitMiddleware`
-
+- All routes under src/api/routes/
+- Always prefix endpoints: /api/v1/<resource>
+- File naming: <resource>.routes.ts
+## Required Middleware
+router.post('/api/v1/subscriptions/cancel', authMiddleware, asyncHandler(cancelSubscriptionController));
 ## Request Validation
-- Use Zod for all input schemas
-- Name schemas: `<Action><Resource>Schema` (e.g. `CancelSubscriptionSchema`)
-- Validation errors must return HTTP 400 with `{ success: false, error: { code, message, fields } }`
-
+- Use Zod for all request bodies.
+- Schema name: <Action><Resource>Schema e.g. CancelSubscriptionSchema
+- Validate in the controller before calling any service.
 ## Response Envelope
-Every response must use this shape:
-```json
-{ "success": true, "data": {}, "meta": {} }
-```
-- Use `sendSuccess(res, data, meta?)` helper from `@api/helpers/response.ts`
-- Never send raw `res.json({})` without the envelope
-
+- Always use sendSuccess / sendError helpers.
+- return sendSuccess(res, { subscriptionId }, 200);
+- return sendError(res, new AppError('NOT_FOUND', 404));
+## Controllers
+- Stay thin, no business logic.
+- Delegate immediately to the service layer.
+- Never import Prisma directly in a controller.
 ## Error Handling
-- Use `AppError(message, statusCode)` for all thrown errors
-- Wrap async route handlers with `asyncHandler()` from `@api/middleware/asyncHandler.ts`
-- Global error handler in `src/api/middleware/errorHandler.ts` catches all AppErrors
-
-## HTTP Status Codes
-| Situation        | Code |
-|-----------------|------|
-| Success GET      | 200  |
-| Created POST     | 201  |
-| Validation error | 400  |
-| Unauthorized     | 401  |
-| Not found        | 404  |
-| Server error     | 500  |
+- Use AppError from @api/errors.ts, never throw raw Error.
+- Let asyncHandler catch thrown errors and forward to error middleware.

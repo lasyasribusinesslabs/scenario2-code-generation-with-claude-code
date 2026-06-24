@@ -1,17 +1,15 @@
 {
-  "_comment": "This is a TEMPLATE only. Copy the mcpServers block into your personal ~/.claude.json file. Never commit real tokens or keys to version control.",
+  "_comment": "PERSONAL MCP CONFIG - Copy this into ~/.claude.json on your local machine. DO NOT commit real tokens. Example only.",
+  "_scope": "personal (user-scoped, stored in ~/.claude.json, NOT version-controlled)",
   "mcpServers": {
     "stripe": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-stripe"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-stripe"],
       "env": {
         "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
       },
-      "description": "Personal Stripe MCP — for testing billing flows locally. Set STRIPE_SECRET_KEY in your shell profile. This server is personal-scoped (not in .mcp.json) because Stripe keys must never be shared."
+      "description": "Personal Stripe MCP. Key from shell environment, never hardcoded."
     }
   }
 }

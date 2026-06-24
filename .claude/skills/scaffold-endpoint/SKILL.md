@@ -1,55 +1,27 @@
 ---
 name: scaffold-endpoint
-description: Scaffolds a complete API endpoint with route file, Zod schema, service stub, and test file following SubSync conventions.
+description: Scaffolds a complete API endpoint following SubSync conventions.
 context: fork
-allowed-tools:
-  - Read
-  - Write
-  - Edit
-  - Bash
+allowed-tools: [Read, Write, Bash]
 ---
-
-# Skill: scaffold-endpoint
-
-## Purpose
-Generate a production-ready endpoint scaffold in one command.
-Runs in a forked context so output doesn't pollute main chat.
-
-## Usage
-```
-/skill scaffold-endpoint <ResourceName>
-```
-Example: `/skill scaffold-endpoint CancelSubscription`
-
+# Skill: Scaffold Endpoint
 ## Steps
-
-1. **Read conventions** — Load `CLAUDE.md`, `.claude/rules/api-conventions.md`, and `.claude/rules/test-conventions.md` before generating anything.
-
-2. **Create route file** — `src/api/routes/<resource>.ts`
-   - Express Router with authMiddleware
-   - Zod schema named `<Action><Resource>Schema`
-   - asyncHandler wrapper
-   - sendSuccess response envelope
-   - Correct HTTP status codes per api-conventions
-
-3. **Create service file** — `src/api/services/<resource>Service.ts`
-   - Pure async functions (no req/res)
-   - Typed inputs and return values
-   - AppError for domain errors
-   - Stub implementation with TODO comments
-
-4. **Create test file** — `src/tests/api/<resource>.test.ts`
-   - describe block named after the route
-   - beforeEach with vi.clearAllMocks()
-   - Three test stubs: happy path, validation error, auth error
-
-5. **Print summary** — List all files created with their paths.
-
-## Output Format
-```
-✅ scaffold-endpoint complete
+### Step 1 - Read Conventions
+Read .claude/rules/api-conventions.md and .claude/rules/test-conventions.md before writing any code.
+### Step 2 - Create Route File
+Write src/api/routes/<endpoint>.routes.ts with authMiddleware, Zod schema, asyncHandler, /api/v1/ prefix.
+### Step 3 - Create Service File
+Write src/api/services/<endpoint>.service.ts as a pure function taking a validated DTO, calling repository only.
+### Step 4 - Create Repository Function
+Add to src/db/repositories/<resource>.repository.ts using Prisma findUniqueOrThrow.
+### Step 5 - Create Test File
+Write src/tests/<endpoint>.test.ts with describe, 3 it blocks (happy/validation/auth), beforeEach vi.clearAllMocks(), mocked repository.
+## Output Summary Format
+Print after all steps:
+✅ Scaffold complete for: <endpoint name>
 Files created:
-  - src/api/routes/cancelSubscription.ts
-  - src/api/services/cancelSubscriptionService.ts
-  - src/tests/api/cancelSubscription.test.ts
-```
+  src/api/routes/<endpoint>.routes.ts
+  src/api/services/<endpoint>.service.ts
+  src/db/repositories/<resource>.repository.ts (updated)
+  src/tests/<endpoint>.test.ts
+Next: run npm run test to verify stubs pass.
