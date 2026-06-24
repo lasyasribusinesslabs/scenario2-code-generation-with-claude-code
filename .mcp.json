@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "postgres": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${DATABASE_URL}"
+      ],
+      "description": "Shared team DB access. DATABASE_URL must be set in your .env file. Never hardcode credentials here — this file is version-controlled."
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      },
+      "description": "Read/write GitHub issues and PRs. Set GITHUB_PERSONAL_ACCESS_TOKEN in your environment."
+    }
+  }
+}
