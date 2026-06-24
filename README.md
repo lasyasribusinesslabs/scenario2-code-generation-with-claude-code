@@ -1,9 +1,7 @@
 # SubSync SaaS — Claude Code Workspace
 
-A fully configured Claude Code developer workspace for a subscription management SaaS.
-Built to demonstrate all six Claude Code configuration layers.
-
-**Assessment ID:** 2026-2403
+Project made for assessment for BusinessLabs.org
+My id is 2026-2403
 
 ---
 
